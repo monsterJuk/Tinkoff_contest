@@ -1,27 +1,39 @@
-import psutil
-import datetime
+def timemometr(func):
+    from time import time
+    import psutil
 
-start_time = datetime.datetime.now().microsecond
+    def wrapper(*args):
+        start_time = time()
+        value = func(*args)
+        end_time = time()
+        print(f'Время выполнения: {end_time - start_time} сек')
+        process = psutil.Process()
+        print(f"Употребленная память : +\
+              {process.memory_info().rss / 1024 / 1024} Мб")
+        return value
+    return wrapper
 
-input_data = [100, 10, 12, 15]
 
-internet_tariff_cost = input_data[0]
-internet_tariff_limit = input_data[1]
-over_limit_cost = input_data[2]
-over_limit_quantity = input_data[3]
+input_data = input("\nВведите данные: ")
+input_data = input_data.split(" ")
+input_data = list(map(int, input_data))
 
-over_limit = over_limit_quantity - internet_tariff_limit
 
-if over_limit > 0:
-    result_cost = internet_tariff_cost + over_limit * over_limit_cost
-else:
-    result_cost = internet_tariff_cost
+@timemometr
+def get_tariff_cost(input_data):
+    internet_tariff_cost = input_data[0]
+    internet_tariff_limit = input_data[1]
+    over_limit_cost = input_data[2]
+    over_limit_quantity = input_data[3]
 
-print(result_cost)
+    over_limit = over_limit_quantity - internet_tariff_limit
 
-finish_time = datetime.datetime.now().microsecond
-result_time = finish_time - start_time
-print("Время выполнения: " + str(result_time) + " mcs")
+    if over_limit > 0:
+        result_cost = internet_tariff_cost + over_limit * over_limit_cost
+    else:
+        result_cost = internet_tariff_cost
 
-process = psutil.Process()
-print(f"Употребленная память : {process.memory_info().rss / 1024 / 1024} Мб")
+    return result_cost
+
+
+print(get_tariff_cost(input_data))

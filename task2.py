@@ -1,30 +1,34 @@
-import psutil
-import datetime
+def timemometr(func):
+    from time import time
+    import psutil
 
-N = 5
+    def wrapper(*args):
+        start_time = time()
+        value = func(*args)
+        end_time = time()
+        print(f'Время выполнения: {end_time - start_time} сек')
+        process = psutil.Process()
+        print(f"Употребленная память : \
+              {process.memory_info().rss / 1024 / 1024} Мб")
+        return value
+    return wrapper
 
 
-def get_number_of_cuts(number_of_people):
+number = input("\nВведите данные: ")
+number = int(number)
+
+
+@timemometr
+def get_number_of_cuts(number):
     number_of_cuts = 0
     _ = 0
-    while number_of_people // 2 > 0:
-        if number_of_people % 2 > 0 and _ == 0:
+    while number // 2 > 0:
+        if number % 2 > 0 and _ == 0:
             number_of_cuts += 1
             _ += 1
         number_of_cuts += 1
-        number_of_people = number_of_people // 2
+        number = number // 2
     return number_of_cuts
 
 
-start_time = datetime.datetime.now().microsecond
-
-number_of_cuts = get_number_of_cuts(N)
-print(number_of_cuts)
-
-finish_time = datetime.datetime.now().microsecond
-total_time = finish_time - start_time
-
-print("Время выполнения: " + str(total_time) + " mcs")
-
-process = psutil.Process()
-print(f"Употребленная память : {process.memory_info().rss / 1024 / 1024} Мб")
+print(get_number_of_cuts(number))

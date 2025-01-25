@@ -1,55 +1,35 @@
-import psutil
-import datetime
+def timemometr(func):
+    from time import time
+    import psutil
 
-# first_string = "5, 5"
-# second_string = "1, 4, 9, 16, 25"
-# third_string = "2"
-
-first_string = "6, 4"
-second_string = "1, 2, 3, 6, 8, 25"
-third_string = "5"
-
-first_list = first_string.split(",")
-second_list = second_string.split(",")
-third_list = third_string.split(",")
-
-first_list = list(map(int, first_list))
-second_list = list(map(int, second_list))
-third_list = list(map(int, third_list))
+    def wrapper(*args):
+        start_time = time()
+        value = func(*args)
+        end_time = time()
+        print(f'Время выполнения: {end_time - start_time} сек')
+        process = psutil.Process()
+        print(f"Употребленная память : \
+              {process.memory_info().rss / 1024 / 1024} Мб")
+        return value
+    return wrapper
 
 
-def get_min_time():
+count, t = [int(i) for i in input().split()]
+levels = [int(i) for i in input().split()]
+index_employee = int(input()) - 1
+
+
+@timemometr
+def get_min_time(t, levels, index_employee):
     if (
-        second_list[third_list[0] - 1] - second_list[0] <= first_list[1]
-        or second_list[-1] - second_list[third_list[0] - 1] <= first_list[1]
+        levels[index_employee] - levels[0] <= t
+        or levels[-1] - levels[index_employee] <= t
     ):
-        min_time = second_list[-1] - second_list[0]
-    elif (
-        second_list[third_list[0] - 1] - second_list[0]
-        < second_list[-1] - second_list[third_list[0] - 1]
-    ):
-        min_time = (second_list[third_list[0] - 1] - second_list[0]) * 2 + (
-            second_list[-1] - second_list[third_list[0] - 1]
-        )
-    elif (
-        second_list[third_list[0] - 1] - second_list[0]
-        > second_list[-1] - second_list[third_list[0] - 1]
-    ):
-        min_time = (second_list[third_list[0] - 1] - second_list[0]) + (
-            second_list[-1] - second_list[third_list[0] - 1] * 2
-        )
+        min_time = levels[-1] - levels[0]
+    else:
+        min_time = levels[-1] - levels[0] + min(levels[-1] - levels[index_employee], levels[index_employee] - levels[0])
 
     return min_time
 
 
-start_time = datetime.datetime.now().microsecond
-
-min_time = get_min_time()
-print(min_time)
-
-finish_time = datetime.datetime.now().microsecond
-total_time = finish_time - start_time
-print("Время выполнения: " + str(total_time) + " mcs")
-
-process = psutil.Process()
-print(f"Употребленная память: {process.memory_info().rss / 1024 / 1024} Мб")
+print(get_min_time(t, levels, index_employee))
