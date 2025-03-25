@@ -1,3 +1,6 @@
+from random import randint
+
+
 def timemometr(func):
     from time import time
     import psutil
@@ -17,24 +20,28 @@ def timemometr(func):
     return wrapper
 
 
-n, m = list(map(int, input().split()))
-kilometers_per_day = list(map(int, input().split()))
+# n, m = list(map(int, input().split()))
+# kilometers_per_day = list(map(int, input().split()))
+
+n = 2 * 5000  # 3 <= n <= 2*10**5
+# m = randint(1, n - 2)
+m = n - 2
+kilometers_per_day = [randint(1, n) for i in range(n + 1)]
 
 
 @timemometr
 def func(n, m, kilometers_per_day):
     n -= 2
-    for kilometers in kilometers_per_day[2:]:
-        if kilometers < kilometers_per_day[0] or kilometers > kilometers_per_day[1]:
-            n -= 1
-    good_days_needed = m - n
 
     for index, day in enumerate(kilometers_per_day[2:]):
-        if day >= kilometers_per_day[0] and day <= kilometers_per_day[1]:
+        if day < kilometers_per_day[0] or day > kilometers_per_day[1]:
+            n -= 1
+        elif day >= kilometers_per_day[0] and day <= kilometers_per_day[1]:
             try:
                 kilometers_per_day.pop(index + 2)
             except IndexError:
                 continue
+    good_days_needed = m - n
 
     moves_down = 0
     moves_up = 0

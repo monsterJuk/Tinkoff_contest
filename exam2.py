@@ -17,8 +17,10 @@ def timemometr(func):
     return wrapper
 
 
-n = int(input())
-day_total_cost = [int(input()) for i in range(n)]
+# n = int(input())
+day_total_cost = [10**18 - i for i in range(10)]
+
+# day_total_cost = [int(input()) for i in range(n)]
 
 
 @timemometr

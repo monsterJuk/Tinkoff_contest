@@ -28,9 +28,9 @@ def timemometr(func):
 # n, s = 3, 3
 # a = [int(i) for i in "2 1 9 1 9 1 9 1 8 1".split()]
 # a = [int(i) for i in "1 2 3".split()]
-n = 1000
+n = 500
 s = random.randint(10**8, 10**15)
-a = [random.randint(1, min(s, 10**9)) for _ in range(n)]
+lengths = a = [random.randint(1, min(s, 10**9)) for _ in range(n)]
 
 
 @timemometr
@@ -78,5 +78,38 @@ def exam5_dicted(n: int, s: int, a: list[int]):
     return total
 
 
+@timemometr
+def func(n, s, lengths):
+    values_list = []
+    for num1 in range(n):
+        for num2 in range(num1, n):
+            values_list.append([lengths[i] for i in range(num1, num2 + 1)])
+
+    segments = []
+    segment = []
+    seg = []
+    val = 0
+    for val in values_list:
+        for i, item in enumerate(val):
+            if sum(seg) + item <= s:
+                seg.append(item)
+            else:
+                segment.append(seg.copy())
+                seg.clear()
+                seg.append(item)
+            if i == len(val) - 1:
+                segment.append(seg.copy())
+                segments.append(segment.copy())
+                seg.clear()
+                segment.clear()
+
+    summa = 0
+    for i in segments:
+        summa += len(i)
+
+    return summa
+
+
 print(exam5(n, s, a))
 print(exam5_dicted(n, s, a))
+print(func(n, s, lengths))
