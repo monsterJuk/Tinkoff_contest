@@ -1,6 +1,3 @@
-# from random import randint
-
-
 def timemometr(func):
     from time import time
     import psutil
@@ -23,26 +20,23 @@ def timemometr(func):
 n, k = list(map(int, input().split()))
 numbers = list(map(int, input().split()))
 
-# n = 10**2
-# k = 300
-
-# numbers = [randint(1, 10**8) for _ in range(n)]
-
 
 @timemometr
-def func(k, numbers):
+def func(n, k, numbers):
     for p in range(1, k + 1):
-        # numbers = sorted(numbers)
+        numbers = sorted(numbers)
         result = []
         for i, num1 in enumerate(numbers):
             for num2 in numbers[i + 1 :]:
                 if num1 < num2:
-                    result.append((num1 + num2) ** p)
+                    result.append((num1, num2))
 
+        result = list(map(sum, result))
+        result = list(map(lambda x: x**p, result))
         result = sum(result)
         result = result % 998244353
 
         print(result)
 
 
-func(k, numbers)
+func(n, k, numbers)

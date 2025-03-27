@@ -10,34 +10,34 @@ def timemometr(func):
         process = psutil.Process()
         print(
             f"Употребленная память : +\
-{process.memory_info().rss / 1024 / 1024} Мб"
+    {process.memory_info().rss / 1024 / 1024} Мб"
         )
         return value
 
     return wrapper
 
 
-# n = int(input())
-day_total_cost = [10**18 - i for i in range(10)]
-
-# day_total_cost = [int(input()) for i in range(n)]
-
+n = int(input())
+max_i = len(bin(10**18)) - 3
 
 @timemometr
-def get_cost(day_total_cost):
-    for cost in day_total_cost:
-        flowers = []
-        i = 0
-        while cost > 0:
-            if cost & 1:
-                flowers.append(i)
-            i += 1
-            cost = cost >> 1
+def get_cost(a: int) -> int:
+    
+    counter = 0
+    c = 0
+    i = max_i
+    while i >= 0:
+        b = 1 << i
+        i -= 1
+        if a & b:
+            c |= b
+            counter += 1
+            if counter == 3:
+                return c
+    return -1
 
-        if len(flowers) > 2:
-            print(sum([2**i for i in flowers[-3:]]))
-        else:
-            print(-1)
 
+numbers = [get_cost(int(input())) for _ in range(n)]
 
-get_cost(day_total_cost)
+for i in numbers:
+    print(i)
